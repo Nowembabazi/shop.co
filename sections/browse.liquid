@@ -1,0 +1,171 @@
+{% schema %}
+{
+  "name": "Browse by Dress Style",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "casual_image",
+      "label": "Casual Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "formal_image",
+      "label": "Formal Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "party_image",
+      "label": "Party Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "gym_image",
+      "label": "Gym Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Browse by Dress Style"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="browse-by-dress-style">
+  <h2 class="section-title">BROWSE BY DRESS STYLE</h2>
+  <div class="image-container">
+    <!-- Casual Image (Smaller in the first row) -->
+    <div class="image-item image-small">
+      <img src="{{ section.settings.casual_image | img_url: 'medium' }}" alt="Casual" class="image">
+    </div>
+
+    <!-- Formal Image (Larger in the first row) -->
+    <div class="image-item image-large">
+      <img src="{{ section.settings.formal_image | img_url: 'medium' }}" alt="Formal" class="image">
+    </div>
+
+    <!-- Party Image (Larger in the second row) -->
+    <div class="image-item image-large">
+      <img src="{{ section.settings.party_image | img_url: 'medium' }}" alt="Party" class="image">
+    </div>
+
+    <!-- Gym Image (Smaller in the second row) -->
+    <div class="image-item image-small">
+      <img src="{{ section.settings.gym_image | img_url: 'medium' }}" alt="Gym" class="image">
+    </div>
+  </div>
+</section>
+
+
+<style>
+  /* Basic styles for section */
+.browse-by-dress-style {
+  background-color: #f7fafc; /* light gray */
+  padding: 2.5rem 1.5rem; /* padding for section */
+  border-radius: 0.5rem; /* rounded corners */
+}
+
+.section-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.image-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns */
+  gap: 1rem;
+  grid-template-rows: auto; /* Dynamic rows */
+}
+
+.image-item {
+  position: relative;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+/* Mobile view (images stacked vertically) */
+@media screen and (max-width: 768px) {
+  .image-container {
+    grid-template-columns: 1fr; /* Stack images in one column */
+  }
+
+  .image-item {
+    margin-bottom: 42px;
+    margin-top: 40px;
+  }
+}
+
+/* Desktop view (images in grid layout) */
+@media screen and (min-width: 769px) {
+  .image-item.image-small {
+    grid-row: span 1; /* Make the small images span 1 row */
+  }
+
+  .image-item.image-large {
+    grid-row: span 2; /* Make the large images span 2 rows */
+  }
+}
+
+  .browse-by-dress-style {
+    background-color: #f7fafc; /* light gray */
+    padding: 2.5rem 1.5rem; /* padding for section */
+    border-radius: 0.5rem; /* rounded corners */
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+
+  .image-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .image-item {
+    flex: 1;
+    min-width: 120px;
+    position: relative;
+  }
+
+  .image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+
+  /* Mobile view (images stacked vertically) */
+  @media screen and (max-width: 768px) {
+    .image-container {
+      flex-direction: column;
+    }
+
+    .image-item {
+      margin-bottom: 42px;
+      margin-top: 40px;
+    }
+  }
+
+  /* Desktop view (images in a row) */
+  @media screen and (min-width: 769px) {
+    .image-container {
+      flex-direction: row;
+    }
+
+    .image-item {
+      flex: 1;
+    }
+  }
+</style>
