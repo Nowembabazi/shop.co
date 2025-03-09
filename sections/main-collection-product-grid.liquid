@@ -38,7 +38,7 @@
 
 <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
   {%- paginate collection.products by section.settings.products_per_page -%}
-    {% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
+    
     {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
       <facet-filters-form class="facets facets-vertical-sort page-width small-hide">
         <form class="facets-vertical-form" id="FacetSortForm">
@@ -49,19 +49,9 @@
               </h2>
               <div class="select">
                 {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
-                <select
-                  name="sort_by"
-                  class="facet-filters__sort select__select caption-large"
-                  id="SortBy"
-                  aria-describedby="a11y-refresh-page-message"
-                >
+                <select name="sort_by" class="facet-filters__sort select__select caption-large" id="SortBy" aria-describedby="a11y-refresh-page-message">
                   {%- for option in collection.sort_options -%}
-                    <option
-                      value="{{ option.value | escape }}"
-                      {% if option.value == sort_by %}
-                        selected="selected"
-                      {% endif %}
-                    >
+                    <option value="{{ option.value | escape }}" {% if option.value == sort_by %}selected="selected"{% endif %}>
                       {{ option.name | escape }}
                     </option>
                   {%- endfor -%}
@@ -72,27 +62,6 @@
               </div>
             </div>
           </div>
-
-          <div class="product-count-vertical light" role="status">
-            <h2 class="product-count__text text-body">
-              <span id="ProductCountDesktop">
-                {%- if collection.results_count -%}
-                  {{
-                    'templates.search.results_with_count'
-                    | t: terms: collection.terms, count: collection.results_count
-                  }}
-                {%- elsif collection.products_count == collection.all_products_count -%}
-                  {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
-                {%- else -%}
-                  {{
-                    'products.facets.product_count'
-                    | t: product_count: collection.products_count, count: collection.all_products_count
-                  }}
-                {%- endif -%}
-              </span>
-            </h2>
-            {%- render 'loading-spinner' -%}
-          </div>
         </form>
       </facet-filters-form>
     {%- endif -%}
@@ -100,48 +69,66 @@
     <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
       {{ 'component-facets.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+
       {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
-        <aside
-          aria-labelledby="verticalTitle"
-          class="facets-wrapper{% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %}{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
-          id="main-collection-filters"
-          data-id="{{ section.id }}"
-        >
-          {% render 'facets',
-            results: collection,
-            enable_filtering: section.settings.enable_filtering,
-            enable_sorting: section.settings.enable_sorting,
-            filter_type: section.settings.filter_type,
-            paginate: paginate
-          %}
-          
-          {%- assign color_metafield = collection.metafields.custom.color -%} <!-- Color metafield from collection -->
-          
-          {%- if color_metafield != blank -%}
-            <div class="facet-filter facet-filter--color">
-              <h3 class="facet-filter__title">{{ 'products.facets.filter_by_color' | t }}</h3>
-              <div class="facet-filter__options">
-                {%- assign colors = color_metafield | split: ',' -%} <!-- Splitting color list stored as a comma-separated string -->
-                {%- for color in colors -%}
-                  <label for="color-{{ color | escape }}" class="color-swatch">
-                    <input type="checkbox" id="color-{{ color | escape }}" name="color" value="{{ color | escape }}" class="color-swatch__input">
-                    <span class="color-swatch__label" style="background-color: {{ color | escape }};"></span>
-                  </label>
-                {%- endfor -%}
+        <aside aria-labelledby="verticalTitle" class="facets-wrapper" id="main-collection-filters" data-id="{{ section.id }}">
+          <form id="FacetFiltersForm">
+            {%- for filter in collection.filters -%}
+              <div class="facet-filter">
+                <h3 class="facet-filter__title">{{ filter.label }}</h3>
+
+                {%- case filter.type -%}
+                  
+                  {%- when 'price_range' -%}
+                    <div class="facet-filter__price-range">
+                      <input type="range" name="price" min="{{ filter.min_value }}" max="{{ filter.max_value }}" step="10">
+                      <span>Min: ${{ filter.min_value }} - Max: ${{ filter.max_value }}</span>
+                    </div>
+
+                  {%- when 'list' -%}
+                    <ul class="facet-filter__list">
+                      {%- for value in filter.values -%}
+                        <li>
+                          <input type="checkbox" id="{{ value.param_name }}" name="{{ filter.param_name }}" value="{{ value.value }}">
+                          <label for="{{ value.param_name }}">{{ value.label }} ({{ value.count }})</label>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+
+                  {%- when 'color' -%}
+                    <div class="facet-filter__color">
+                      {%- for value in filter.values -%}
+                        <label class="color-swatch" style="background-color: {{ value.value }}">
+                          <input type="checkbox" name="{{ filter.param_name }}" value="{{ value.value }}">
+                        </label>
+                      {%- endfor -%}
+                    </div>
+
+                  {% render 'facet-color' %}
+                   {% render 'facet-size' %}
+                  {%- when 'product_type' -%}
+                    <select name="{{ filter.param_name }}">
+                      {%- for value in filter.values -%}
+                        <option value="{{ value.value }}">{{ value.label }}</option>
+                      {%- endfor -%}
+                    </select>
+
+                  {%- when 'dress_style' -%}
+                    <select name="{{ filter.param_name }}">
+                      {%- for value in filter.values -%}
+                        <option value="{{ value.value }}">{{ value.label }}</option>
+                      {%- endfor -%}
+                    </select>
+
+                {%- endcase -%}
               </div>
-            </div>
-          {%- endif -%}
-          
+            {%- endfor -%}
+            
+          </form>
         </aside>
       {%- endif -%}
 
-      <div
-        class="product-grid-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-        id="ProductGridContainer"
-        {% if settings.animations_reveal_on_scroll %}
-          data-cascade
-        {% endif %}
-      >
+      <div class="product-grid-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" id="ProductGridContainer">
         {%- if collection.products.size == 0 -%}
           <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
             <div class="loading-overlay gradient"></div>
@@ -149,40 +136,21 @@
               <h2 class="title title--primary">
                 {{ 'sections.collection_template.empty' | t -}}
                 <br>
-                {{
-                  'sections.collection_template.use_fewer_filters_html'
-                  | t: link: collection.url, class: 'underlined-link link'
-                }}
+                {{ 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: 'underlined-link link' }}
               </h2>
             </div>
           </div>
         {%- else -%}
-          <div
-            class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
-          >
+          <div class="collection">
             <div class="loading-overlay gradient"></div>
-            <ul
-              id="product-grid"
-              data-id="{{ section.id }}"
-              class="
-                grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
-                grid--{{ section.settings.columns_desktop }}-col-desktop
-                {% if section.settings.quick_add == 'bulk' %} collection-quick-add-bulk{% endif %}
-              "
-            >
+            <ul id="product-grid" data-id="{{ section.id }}" class="grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop">
               {% assign skip_card_product_styles = false %}
               {%- for product in collection.products -%}
                 {% assign lazy_load = false %}
                 {%- if forloop.index > 2 -%}
                   {%- assign lazy_load = true -%}
                 {%- endif -%}
-                <li
-                  class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-                  {% if settings.animations_reveal_on_scroll %}
-                    data-cascade
-                    style="--animation-order: {{ forloop.index }};"
-                  {% endif %}
-                >
+                <li class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" data-cascade style="--animation-order: {{ forloop.index }};">
                   {% render 'card-product',
                     card_product: product,
                     media_aspect_ratio: section.settings.image_ratio,
@@ -208,10 +176,8 @@
       </div>
     </div>
   {%- endpaginate -%}
-  {% if section.settings.image_shape == 'arch' %}
-    {{ 'mask-arch.svg' | inline_asset_content }}
-  {%- endif -%}
 </div>
+
 
 
 

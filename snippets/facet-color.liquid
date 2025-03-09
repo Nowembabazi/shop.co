@@ -1,11 +1,10 @@
-{%- assign color_metafield = collection.metafields.custom.color -%} <!-- Change this to your specific metafield name -->
+{%- assign color_metafield = collection.metafields.custom.color -%}
 
 {%- if color_metafield != blank -%}
   <div class="facet-filter facet-filter--color">
     <h3 class="facet-filter__title">{{ 'products.facets.filter_by_color' | t }}</h3>
-    
     <div class="facet-filter__options">
-      {%- assign colors = color_metafield | split: ',' -%} <!-- Assuming colors are stored as a comma-separated list in the metafield -->
+      {%- assign colors = color_metafield | split: ',' -%}
       {%- for color in colors -%}
         <label for="color-{{ color | escape }}" class="color-swatch">
           <input type="checkbox" id="color-{{ color | escape }}" name="color" value="{{ color | escape }}" class="color-swatch__input">

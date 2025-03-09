@@ -1,0 +1,16 @@
+{%- assign size_metafield = collection.metafields.custom.size -%}
+
+{%- if size_metafield != blank -%}
+  <div class="facet-filter facet-filter--size">
+    <h3 class="facet-filter__title">{{ 'products.facets.filter_by_size' | t }}</h3>
+    <div class="facet-filter__options">
+      {%- assign sizes = size_metafield | split: ',' -%}
+      {%- for size in sizes -%}
+        <label for="size-{{ size | escape }}">
+          <input type="checkbox" id="size-{{ size | escape }}" name="size" value="{{ size | escape }}">
+          {{ size | escape }}
+        </label>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}

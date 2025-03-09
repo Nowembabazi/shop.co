@@ -25,10 +25,42 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+  /* Make the footer wider */
+  .footer .page-width {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Make footer blocks take up equal space and center them */
+  @media screen and (min-width: 990px) {
+    .footer__blocks-wrapper {
+      display: flex;
+      flex-wrap: nowrap;
+      width: 100%;
+      justify-content: center; 
+    }
+    
+    .footer__blocks-wrapper .footer-block {
+      flex: 1 1 0;
+      width: 0; 
+      min-width: 
+      padding-left: 15px;
+      margin: auto;
+      /* padding-right: 15px; */
+      
+    }
+    .footer-block--menu,
+    .footer-block__brand-info
+    {
+      padding-left:40px;
+    }
+
+    
+  }
 {%- endstyle -%}
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
-  hello
+  
   {%- liquid
     assign has_social_icons = true
     if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
@@ -52,15 +84,24 @@
     {%- unless only_empty_brand -%}
       <div class="footer__content-top page-width">
         {%- if section.blocks.size > 0 -%}
-          {%- liquid
+        {% comment %}  {%- liquid
             if section.blocks.size == 9
               assign footer_grid_class = 'grid--3-col-tablet'
             elsif section.blocks.size > 6
               assign footer_grid_class = 'grid--4-col-desktop'
             elsif section.blocks.size > 4
-              assign footer_grid_class = 'grid--3-col-tablet'
+              assign footer_grid_class = 'grid--3-col-tablet'          
             endif
-          -%}
+          -%} {% endcomment %}
+          {%- liquid
+          if section.blocks.size > 3
+            assign footer_grid_class = 'grid--5-col-desktop'
+          elsif section.blocks.size == 3
+            assign footer_grid_class = 'grid--3-col-tablet'
+          elsif section.blocks.size == 2
+            assign footer_grid_class = 'grid--2-col'
+          endif
+        -%}
           <div
             class="footer__blocks-wrapper grid grid--1-col grid--2-col grid--4-col-tablet {{ footer_grid_class }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
             {% if settings.animations_reveal_on_scroll %}
