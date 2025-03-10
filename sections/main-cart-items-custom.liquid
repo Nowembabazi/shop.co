@@ -104,7 +104,7 @@
 
 .order-summary .promo-code input {
   width: 80%;
-  padding:  1rem;
+  padding:  1.3rem;
   
   border-radius: 4px;
   background:#f1f1f1;
@@ -112,7 +112,7 @@
 
 .order-summary .promo-code button {
   width: 20%;
-  padding: 0.5rem 1rem;
+  padding: 8px 16px;
   background: #000;
   border-radius: 10px;
   cursor: pointer;
@@ -126,7 +126,7 @@
   background: #000;
   color: white;
   border: none;
-  border-radius: 30px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: calc(var(--font-heading-scale)* 1.8rem);
   font-weight: bold;
@@ -679,15 +679,14 @@ cart-remove-button .button--tertiary svg path {
   -%}
   
   <div class="summary-row summary-total">
-    <span>Total</span>
-    <span>{{ total_price | money }}</span>
+    <span class="h3">Total</span>
+    <span class="h3">{{ total_price | money }}</span>
   </div>
 
   <div class="promo-code">
     <input type="text" placeholder="{{ section.settings.promo_code_placeholder }}">
     <button class="button">{{ section.settings.apply_button_text }}</button>
   </div>
-
   <a href="{{ routes.checkout_url }}" class="checkout-button h3 ">{{ section.settings.checkout_button_text }}</a>
 </div>
     </div>
