@@ -1,6 +1,6 @@
 # shop.co
 Project Overview
-This project is a custom-built website using Liquid language, integrated with Webflow, Shopify, and email marketing tools. The website features various sections, including speaker sections, card sections, and more. Used apps like shopify email, weglot for translation that is english ansd spanish and Judge.me for reviews. I coded it in liquid, css, html and javascript
+This project is a custom-built website using Liquid language, integrated with Webflow, Shopify, and email marketing tools. The website features various sections, including speaker sections, card sections, and more. Used apps like shopify email, weglot for translation that is english and spanish and Judge.me for reviews. I coded it in liquid, css, html and javascript
 
 Technical Requirements
 - Liquid language
