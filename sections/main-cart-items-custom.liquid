@@ -99,36 +99,39 @@
   display: flex;
   gap: 10px;
   align-items: center;
+ 
 }
 
 .order-summary .promo-code input {
-  width: 70%;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
+  width: 80%;
+  padding: 1rem;
+  
   border-radius: 4px;
+  background:#f1f1f1;
 }
 
 .order-summary .promo-code button {
-  width: 30%;
-  padding: 0.8rem;
-  background: #f1f1f1;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  width: 20%;
+  padding: 0.5rem 1rem;
+  background: #000;
+  border-radius: 30px;
   cursor: pointer;
+  border:none;
 }
 
 .order-summary .checkout-button {
   width: 100%;
-  padding: 1rem;
+  padding: 1.5rem;
   background: #000;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 30px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: calc(var(--font-heading-scale)* 1.8rem);
   font-weight: bold;
   text-align: center;
   display: block;
+  text-decoration:none;
 }
 
 .order-summary .checkout-button:hover {
@@ -699,7 +702,28 @@ cart-remove-button .button--tertiary svg path {
   
   <div class="summary-row summary-total">
     <span>Total</span>
-    <span>{{ cart.total_price | plus: section.settings.delivery_fee_amount | times: 100 | money }}</span>
+    {%- if item.original_line_price != item.final_line_price -%}
+        <dl class="cart-item__discounted-prices" >
+          <dt class="visually-hidden">
+            {{ 'products.product.price.regular_price' | t }}
+          </dt>
+          <dd>
+            <s class="cart-item__old-price price price--end">
+              {{ item.original_line_price | money }}
+            </s>
+          </dd>
+          <dt class="visually-hidden">
+            {{ 'products.product.price.sale_price' | t }}
+          </dt>
+          <dd class="price price--end">
+            {{ item.final_line_price | money }}
+          </dd>
+        </dl>
+      {%- else -%}
+        <span class="price price--end">
+          {{ item.original_line_price | money }}
+        </span>
+      {%- endif -%}
   </div>
 
   <div class="promo-code">
@@ -707,7 +731,7 @@ cart-remove-button .button--tertiary svg path {
     <button class="button">{{ section.settings.apply_button_text }}</button>
   </div>
 
-  <a href="{{ routes.checkout_url }}" class="checkout-button h3">{{ section.settings.checkout_button_text }}</a>
+  <a href="{{ routes.checkout_url }}" class="checkout-button h3 ">{{ section.settings.checkout_button_text }}</a>
 </div>
     </div>
   </div>
