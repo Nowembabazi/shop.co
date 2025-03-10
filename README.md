@@ -15,8 +15,8 @@ Website Features
 - *Shopify Integration*: Seamless integration with Shopify for e-commerce functionality.
 
 How to Access and Edit the Website
-1. *Webflow Access*: To access the website's Webflow dashboard, go to [insert Webflow URL].
-2. *Shopify Access*: To access the website's Shopify dashboard, go to [insert Shopify URL].
+1. *Webflow Access*: To access the website's Webflow dashboard.
+2. *Shopify Access*: To access the website's Shopify dashboard, go to (https://admin.shopify.com/store/nick-mbabazi/themes)
 3. *Liquid Code*: To edit the website's Liquid code, access the Webflow dashboard and navigate to the "Code" section.
 4. *Email Marketing*: To manage email marketing campaigns, access the email marketing tool dashboard (e.g., Mailchimp).
 
